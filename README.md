@@ -2,8 +2,13 @@
 
 # Work in progress - partially usable yet buggy
 
-This is an effort to add simple task scheduler to lita bot. 
-It is currenly in early development and not yet usable \ working
+This is an effort to add an advanced task scheduler to lita bot. 
+It is currenly in early development but partially usable as-is, but it might be
+pretty buggy as of now.
+
+Supports in, at, every and cron-like tasks. Uses Rufus-scheduler and Chronic.
+
+Planned: domain expiration notification
 
 ## Installation
 
