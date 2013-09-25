@@ -90,7 +90,7 @@ class ReminderTask
   end
 
   def to_s
-    ret = "reminder #{index}, next run: #{@job.next_time.to_s} "
+    ret = "reminder #{index}, next run: #{@job.nil? ? 'unknown yet' : @job.next_time.to_s} "
     if room.nil? || room == ''
       ret += "user:#{user_id} #{user_name}"
     else
