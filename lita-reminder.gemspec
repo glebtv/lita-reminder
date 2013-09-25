@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-reminder"
-  spec.version       = "0.0.2"
+  spec.version       = "0.0.3"
   spec.authors       = ["glebtv"]
   spec.email         = ["glebtv@gmail.com"]
   spec.description   = %q{Reminder for Lita chat bot }

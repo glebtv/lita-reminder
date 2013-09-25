@@ -69,8 +69,10 @@ class ReminderTask
   end
 
   def stop_repeat
-    @repeat_job.unschedule
-    @repeat_job = nil
+    unless @repeat_job.nil?
+      @repeat_job.unschedule
+      @repeat_job = nil
+    end
     unless @periodic
       kill
     end
@@ -126,7 +128,11 @@ class ReminderTask
       else
         re = /^(user\s+id\s+(?<user_id>.*))?^(user\s+name\s+(?<user_id>.*))?(room \s+(?<room>.*))?$/
         m = re.match(message['who'])
-        attrs = attrs.merge(m)
+        if m.nil?
+          attrs['user_name'] = message['who']
+        else
+          attrs = attrs.merge(m)
+        end
       end
       attrs['type'] = message['type']
       attrs['time'] = message['time']

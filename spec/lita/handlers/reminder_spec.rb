@@ -9,6 +9,9 @@ describe Lita::Handlers::Reminder, lita_handler: true do
   it { routes("reminder delete 1").to(:delete) }
   it { routes("reminder done 1").to(:done) }
   it { routes("remind me at 10:00 to do work repeat 2 times 1m").to(:add) }
+  it { routes("remind alex at 09:00 to РАБОТАЙ").to(:add) }
+  it { routes("remind Shell User in 10s to work").to(:add) }
+
   it "adds tasks" do
     send_message("remind me at 2024-01-01 10:30 to заплатить за сервер")
 

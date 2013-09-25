@@ -35,12 +35,19 @@ class ReminderRunner
   end
 
   def done(response)
-    @reminders[response.match_data[1]].stop_repeat
+    @reminders[response.match_data[1].to_i].stop_repeat
   end
   
   def delete(response)
-    index = kill(response.match_data[1].to_i)
-    response.reply("Task #{index} deleted")
+    index = response.match_data[1].to_i
+    if @reminders[index].nil?
+      response.reply("Task #{index} does not exist")
+    elsif index != @reminders[index].index
+      response.reply("Task #{index} is broken (bot internal error)")
+    else
+      kill(index)
+      response.reply("Task #{index} deleted")
+    end
   end
 
   def list(response)
@@ -60,9 +67,6 @@ class ReminderRunner
   end
 
   def kill(index)
-    if index != @reminders[index].index
-      raise 'failed sanity check: task has bad index'
-    end
     @reminders[index].die
     @reminders[index] = nil
     @redis.lset("reminders", index, nil)
