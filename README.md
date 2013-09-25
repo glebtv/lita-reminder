@@ -20,11 +20,16 @@ gem "lita-reminder"
 
 ## Configuration
 
-TODO: Describe any configuration attributes the plugin exposes.
+No configuration is currently present
 
 ## Usage
 
-TODO: Describe the plugin's features and how to use them.
+Schedule a task like this:
+
+  remind here in 10m to do some stuff
+  remind username in 10m to do some stuff repeat 10 times 5s
+  remind me cron * * * * * to say "one minute passed"
+  
 
 ## License
 
