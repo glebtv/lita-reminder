@@ -11,7 +11,7 @@ describe ReminderTask do
     }, Lita::Source.new(carl, 'room'))
     task.user_name.should eq carl.name
     task.user_id.should eq carl.id
-    task.time.should eq '10m'
+    task.time.should eq (Time.now + 600).to_s
     task.index.should eq 1
   end
 end

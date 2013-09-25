@@ -16,13 +16,15 @@ class ReminderTask
 
     @periodic = false
     @job = 
-      if type == 'in'
-        scheduler.in @time do
+      # "in" is converted to "at" upon creation
+      if type == 'at'
+        at = Chronic.parse(@time, now: Time.parse(@c_at))
+        if at < Time.now
           run()
-        end
-      elsif type == 'at'
-        scheduler.at Chronic.parse(@time, now: Time.parse(@c_at)) do
-          run()
+        else
+          scheduler.at at do
+            run()
+          end
         end
       elsif type == 'cron'
         @periodic = true
@@ -31,7 +33,7 @@ class ReminderTask
         end
       elsif type == 'every'
         @periodic = true
-        scheduler.every @time, first_at: @first do
+        scheduler.every @time, first_at: Time.parse(@first) do
           run()
         end
       end
@@ -88,7 +90,21 @@ class ReminderTask
   end
 
   def to_s
-    "reminder #{index}, next run: #{@job.next_time.to_s} user:#{user_id} #{user_name} room:#{room} type:#{type} time:#{time} first_at:#{first} task:#{task} repeat:#{repeat} #{repeat_interval}"
+    ret = "reminder #{index}, next run: #{@job.next_time.to_s} "
+    if room.nil? || room == ''
+      ret += "user:#{user_id} #{user_name}"
+    else
+      ret += "room:#{room}"
+    end
+    ret += " type:#{type} time:#{time}"
+    if type == "every"
+      ret += " first_at:#{first}"
+    end
+    ret += " task:#{task}"
+    if !repeat.nil? && repeat != ""
+      ret += " repeat:#{repeat} times every #{repeat_interval}"
+    end
+    ret
   end
 
   def dump
@@ -114,9 +130,14 @@ class ReminderTask
       end
       attrs['type'] = message['type']
       attrs['time'] = message['time']
+      attrs['first'] = Chronic.parse(message['first']) unless message['first'].nil?
       attrs['repeat'] = message['repeat']
       attrs['repeat_interval'] = message['repeat_interval'] || '10m'
       attrs['task'] = message['task']
+      if attrs['type'] == 'in'
+        attrs['type'] = 'at'
+        attrs['time'] = (Time.now + Rufus.parse_time_string(attrs['time'])).to_s
+      end
       attrs['c_at'] = Time.now.to_s
 
       ReminderTask.new index, attrs

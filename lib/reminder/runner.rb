@@ -20,8 +20,9 @@ class ReminderRunner
       end
     end
     @reminders.each do |task|
-      task.start_job(self)
+      task.start_job(self) unless task.nil?
     end
+
   end
 
   def add(response)

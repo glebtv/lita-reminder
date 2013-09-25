@@ -2,6 +2,7 @@ require 'lita'
 require 'rufus/scheduler'
 require 'reminder/task'
 require 'reminder/runner'
+require 'reminder/domain'
 require 'chronic'
 require 'thread'
 
@@ -17,6 +18,13 @@ module Lita
       route(/^reminder\s+delete\s+(\d+)$/, :delete, help: {"reminder ID delete" => "Delete reminder"})
       route(/^reminder\s+list$/, :list, help: {"reminder list" => "List reminders"})
       route(/^reminder\s+clear\s+all$/, :clear)
+
+      # reminders for domain name expiration
+      route(/^reminder\s+add\s+domain\s+(.*)$/, :add_domains, help: {"reminder add domain DOMAINS ..." => "Add domain expiration reminder"})
+      route(/^reminder\s+delete\s+domain\s+(.*)$/, :delete_domains, help: {"reminder delete domain DOMAINS ..." => "Stop watching domain"})
+      route(/^reminder\s+list\s+domains\s+(.*)$/, :list_domains, help: {"reminder list domains" => "List domain watch list"})
+
+      route(/^server\s+time$/, :time)
 
       attr_accessor :scheduler
 
@@ -53,6 +61,29 @@ module Lita
           response.reply "cleared all reminders"
         end
       end
+
+      def time(response)
+        response.reply Time.now.to_s
+      end
+
+      def add_domains(response) 
+        @@mutex.synchronize do
+          @@runner.add_domains(response)
+        end
+      end
+
+      def delete_domains(response)
+        @@mutex.synchronize do
+          @@runner.delete_domains(response)
+        end
+      end
+
+      def list_domains(response)
+        @@mutex.synchronize do
+          @@runner.list_domains(response)
+        end
+      end
+
       class << self
         def runner
           @@runner
@@ -64,12 +95,11 @@ module Lita
   end
 end
 
+# ugly hack
+# TODO fix this better
 module Lita
   class << self
-    alias_method :run_without_reminder, :run
     def run(config_path = nil)
-      p "run"
-      #robot = run_without_reminder(config_path)
       Config.load_user_config(config_path)
       robot = Robot.new
       redis_base = Redis.new(config.redis)
