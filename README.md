@@ -28,6 +28,8 @@ Schedule a task like this:
 
     remind here in 10m to do some stuff
     remind username in 10m to do some stuff repeat 10 times 5s
+    remind me every 10m first at 2013-10-10 10:00 to do some stuff repeat 10 times 5s
+    remind me at 10:00 to work
     remind me cron * * * * * to say "one minute passed"
 
 ## License
