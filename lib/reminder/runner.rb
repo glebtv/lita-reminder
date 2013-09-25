@@ -28,8 +28,8 @@ class ReminderRunner
   def add(response)
     task = ReminderTask.from_message(@reminder_count, response.match_data, response.message.source)
     @redis.rpush("reminders", task.dump)
-    task.start_job(self)
     @reminders << task
+    task.start_job(self)
     response.reply("Task #{task.index} added, next run at #{task.job.next_time.strftime('%Y-%m-%d %H:%M:%S')}")
     @reminder_count += 1
   end
