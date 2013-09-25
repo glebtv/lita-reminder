@@ -26,10 +26,9 @@ No configuration is currently present
 
 Schedule a task like this:
 
-  remind here in 10m to do some stuff
-  remind username in 10m to do some stuff repeat 10 times 5s
-  remind me cron * * * * * to say "one minute passed"
-  
+    remind here in 10m to do some stuff
+    remind username in 10m to do some stuff repeat 10 times 5s
+    remind me cron * * * * * to say "one minute passed"
 
 ## License
 
