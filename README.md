@@ -1,6 +1,6 @@
 # lita-reminder
 
-# Work in progress - not yet usable
+# Work in progress - partially usable yet buggy
 
 This is an effort to add simple task scheduler to lita bot. 
 It is currenly in early development and not yet usable \ working
