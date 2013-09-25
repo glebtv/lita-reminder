@@ -1,8 +1,9 @@
 class ReminderTask
   attr_accessor :index, :job, :repeat_job, :repeat_count
   def initialize(index, attrs)
-    attrs.each do |attr|
-      send("#{attr.to_s}=".to_sym, attrs[attr]) unless attrs[attr].nil?
+    @index = index
+    attrs.each_pair do |attr, val|
+      send("#{attr.to_s}=".to_sym, val) unless val.nil?
     end
   end
 
@@ -90,13 +91,12 @@ class ReminderTask
   end
 
   class << self
-    def from_message(message, source)
-      p message
+    def from_message(index, message, source)
       attrs = {}
       if message['who'] == 'me'
         attrs['user'] = source.user
       elsif message['who'] == 'here'
-        attrs['room'] = source['room']
+        attrs['room'] = source.room
       end
       attrs['type'] = message['type']
       attrs['time'] = message['time']
@@ -105,17 +105,17 @@ class ReminderTask
       attrs['task'] = message['task']
       attrs['c_at'] = Time.now
 
-      ReminderTask.new attrs
+      ReminderTask.new index, attrs
     end
     def attrs
       [:c_at, :user, :room, :type, :time, :first, :task, :repeat, :repeat_interval]
     end
-    def load(string)
+    def load(index, string)
       if string.nil? || string == ''
         nil
       else
         addrs = MultiJson.load(string)
-        ReminderTask.new attrs
+        ReminderTask.new index, attrs
       end
     end
   end

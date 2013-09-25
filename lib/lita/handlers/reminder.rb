@@ -6,18 +6,23 @@ require 'chronic'
 module Lita
   module Handlers
     class Reminder < Handler 
-      route(/^remind\s+(?<who>\S+)\s+(?<type>at|in|every|cron)\s+(?<time>.*)\s+(first\s+at\s+(?<first>.*))?\s+to\s+(?<task>.*)$(\s+repeat\s+(?<repeat>.*)\s+times\s+(?<repeat_interval>.*))?/, :add,
+      route(/^remind\s+(?<who>\S+)\s+(?<type>at|in|every|cron)\s+(?<time>.*)(\s+first\s+at\s+(?<first>.*))?\s+to\s+(?<task>.*)(\s+repeat\s+(?<repeat>.*)\s+times\s+(?<repeat_interval>.*))?$/, :add,
             help: {"remind (me|here|username|room) (at|in|every|cron) TIME [first at TIME] to TASK repeat [3|many times 10m]" => "Add a reminder"})
-      route(/^reminder\s+(\d+)\s+done$/, :done, help: {"reminder ID done" => "Stop nagging"})
-      route(/^reminder\s+(\d+)\s+delete$/, :delete, help: {"reminder ID delete" => "Delete reminder"})
+      route(/^reminder\s+done\s+(\d+)$/, :done, help: {"reminder ID done" => "Stop nagging"})
+      route(/^reminder\s+delete\s+(\d+)$/, :delete, help: {"reminder ID delete" => "Delete reminder"})
       route(/^reminder\s+list$/, :list, help: {"reminder list" => "List reminders"})
 
       def initialize(robot)
         super(robot)
         @reminder_count = redis.llen("reminders")
-        @reminders = redis.lrange('reminders', 0, -1).map {|v| ReminderTask.load(v) }
+        @reminders = {}
+        redis.lrange('reminders', 0, -1).each_with_index do |task, index|
+          @reminders << ReminderTask.load(index, task)
+        end
         @scheduler = Rufus::Scheduler.start_new
-        p @reminders
+        @reminders.each do |task|
+          task.start_job(self)
+        end
       end
 
       def add(response)
@@ -44,7 +49,6 @@ module Lita
         @redis.lset("reminders", index, nil)
         @reminders[index].die
         @reminders[index] = nil
-
       end
     end
 
