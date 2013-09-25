@@ -3,9 +3,9 @@ Gem::Specification.new do |spec|
   spec.version       = "0.0.1"
   spec.authors       = ["glebtv"]
   spec.email         = ["glebtv@gmail.com"]
-  spec.description   = %q{TODO: Add a description}
-  spec.summary       = %q{TODO: Add a summary}
-  spec.homepage      = "TODO: Add a homepage"
+  spec.description   = %q{Reminder for Lita chat bot }
+  spec.summary       = %q{Reminder for Lita chat bot }
+  spec.homepage      = "https://github.com/glebtv/lita-reminder"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -14,6 +14,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "lita", "~> 2.4"
+  spec.add_runtime_dependency "rufus-scheduler", "~> 2.0.24"
+  spec.add_runtime_dependency "chronic", "~> 0.10.2"
+  
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
