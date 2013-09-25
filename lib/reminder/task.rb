@@ -88,7 +88,7 @@ class ReminderTask
   end
 
   def to_s
-    "reminder next run: #{@job.next_time.to_s} u:#{user_id} #{user_name} r:#{room} #{type} #{time} #{first} #{task} #{repeat} #{repeat_interval}"
+    "reminder #{index}, next run: #{@job.next_time.to_s} user:#{user_id} #{user_name} room:#{room} type:#{type} time:#{time} first_at:#{first} task:#{task} repeat:#{repeat} #{repeat_interval}"
   end
 
   def dump

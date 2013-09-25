@@ -53,8 +53,29 @@ module Lita
           response.reply "cleared all reminders"
         end
       end
+      class << self
+        def runner
+          @@runner
+        end
+      end
     end
 
     Lita.register_handler(Reminder)
+  end
+end
+
+module Lita
+  class << self
+    alias_method :run_without_reminder, :run
+    def run(config_path = nil)
+      p "run"
+      #robot = run_without_reminder(config_path)
+      Config.load_user_config(config_path)
+      robot = Robot.new
+      redis_base = Redis.new(config.redis)
+      redis_ns = Redis::Namespace.new(REDIS_NAMESPACE + ":handlers:reminder", redis: redis_base)
+      Lita::Handlers::Reminder.runner.start(robot, redis_ns)
+      robot.run
+    end
   end
 end
