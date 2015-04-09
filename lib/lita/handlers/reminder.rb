@@ -8,7 +8,7 @@ require 'thread'
 
 module Lita
   module Handlers
-    class Reminder < Handler 
+    class Reminder < Handler
       @@mutex = Mutex.new
       @@runner = ReminderRunner.new
 
@@ -92,20 +92,10 @@ module Lita
     end
 
     Lita.register_handler(Reminder)
-  end
-end
-
-# ugly hack
-# TODO fix this better
-module Lita
-  class << self
-    def run(config_path = nil)
-      Config.load_user_config(config_path)
-      robot = Robot.new
-      redis_base = Redis.new(config.redis)
-      redis_ns = Redis::Namespace.new(REDIS_NAMESPACE + ":handlers:reminder", redis: redis_base)
-      Lita::Handlers::Reminder.runner.start(robot, redis_ns)
-      robot.run
+    on :loaded do
+      redis_ns = redis.clone
+      redis_ns.namespace += ":handlers:reminder"
+      Reminder.runner.start robot, redis_ns
     end
   end
 end
