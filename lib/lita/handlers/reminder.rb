@@ -14,8 +14,8 @@ module Lita
 
       route(/^remind\s+(?<who>.*?)\s+(?<type>at|in|every|cron)\s+(?<time>.*?)(\s+first\s+at\s+(?<first>.*))?\s+to\s+(?<task>.*?)(\s+repeat\s+(?<repeat>.*)\s+times\s+(?<repeat_interval>.*))?$/, :add,
             help: {"remind (me|here|username|room) (at|in|every|cron) TIME [first at TIME] to TASK [repeat 3|many times 10m]" => "Add a reminder"})
-      route(/^reminder\s+done\s+(\d+)$/, :done, help: {"reminder ID done" => "Stop nagging"})
-      route(/^reminder\s+delete\s+(\d+)$/, :delete, help: {"reminder ID delete" => "Delete reminder"})
+      route(/^reminder\s+done\s+(\d+)$/, :done, help: {"reminder done ID" => "Stop nagging"})
+      route(/^reminder\s+delete\s+(\d+)$/, :delete, help: {"reminder delete ID" => "Delete reminder"})
       route(/^reminder\s+list$/, :list, help: {"reminder list" => "List reminders"})
       route(/^reminder\s+clear\s+all$/, :clear)
 
