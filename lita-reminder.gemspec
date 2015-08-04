@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-reminder"
-  spec.version       = "0.0.3"
+  spec.version       = "0.0.4"
   spec.authors       = ["glebtv"]
   spec.email         = ["glebtv@gmail.com"]
   spec.description   = %q{Reminder for Lita chat bot }
@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "lita", "~> 2.4"
+  spec.add_runtime_dependency "lita", ">= 4"
   spec.add_runtime_dependency "rufus-scheduler", "~> 2.0.24"
   spec.add_runtime_dependency "chronic", "~> 0.10.2"
   spec.add_runtime_dependency "whois", "~> 3.2.1"

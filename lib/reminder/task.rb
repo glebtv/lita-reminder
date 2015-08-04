@@ -45,7 +45,7 @@ class ReminderTask
     else
       user = Lita::User.create(user_id, name: user_name)
     end
-    Lita::Source.new(user, room)
+    Lita::Source.new(user: user, room: room)
   end
 
   def run
