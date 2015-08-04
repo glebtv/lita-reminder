@@ -8,7 +8,7 @@ describe ReminderTask do
       'type' => 'in',
       'time' => '10m',
       'repeat' => ''
-    }, Lita::Source.new(carl, 'room'))
+    }, Lita::Source.new(user: carl, room: 'room'))
     task.user_name.should eq carl.name
     task.user_id.should eq carl.id
     task.time.should eq (Time.now + 600).to_s

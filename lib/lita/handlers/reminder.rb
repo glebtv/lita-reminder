@@ -91,6 +91,7 @@ module Lita
       end
     end
 
+    extend Lita::Handler::EventRouter
     Lita.register_handler(Reminder)
     on :loaded do
       redis_ns = redis.clone
